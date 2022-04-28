@@ -6,7 +6,7 @@ namespace RBTREE {
 		template<typename T, typename _Alloc = std::allocator<T>>
 		struct node {
 			typedef node* _node;
-			typedef std::string colorPlaceholder;
+			typedef int colorPlaceholder;
 			T _data;
 			_node _left;
 			_node _right;
@@ -14,6 +14,12 @@ namespace RBTREE {
 			colorPlaceholder _color;
 //			int color; // 1 -> Red, 0 -> Black
 //			node(const T& data, )
+			bool isBlack() const {
+				return _color == 0;
+			}
+			bool isRed() const {
+				return _color == 1;
+			}
 		};
 	};
 
@@ -24,7 +30,7 @@ namespace RBTREE {
 		RB_TREE() 
 		{
 			TNULL = new node<T>;
-			TNULL->_color = "BLACK";
+			TNULL->_color = 0;
 			TNULL->_left = nullptr;
 			TNULL->_right = nullptr;
 			root = TNULL;
@@ -43,7 +49,7 @@ namespace RBTREE {
 			_new_node->_data = key;
 			_new_node->_left = TNULL;
 			_new_node->_right = TNULL;
-			_new_node->_color = "RED";
+			_new_node->_color = 1;
 			branch y = nullptr;
 			branch x = this->_root;
 			while (x != TNULL) {
@@ -72,12 +78,56 @@ namespace RBTREE {
 			if (_new_node->_parent == nullptr) {
 				return;
 			}
-			// fixInsert(_new_node);
+			fixInsert(_new_node);
 		}
-
+		void LRotate(branch node) {
+			branch tmp = node->_right;
+			node->_right = tmp->_left;
+			if (tmp->_left != TNULL) {
+				tmp->_left->_parent = node;
+			}
+			tmp->_parent = node->_parent;
+			if (node->_parent == nullptr) {
+				_root = tmp;
+			}
+			else if (node == node->_parent->_left) {
+				node->_parent->_left = tmp;
+			}
+			else {
+				node->_parent->_right = tmp;
+			}
+			tmp->_left = node;
+			node->_parent = tmp;
+		}
+		void RRotate(branch node) {
+			branch tmp = node->_left;
+			node->_left = tmp->_right;
+			if (tmp->_right != TNULL) {
+				tmp->_right->_parent = node;
+			}
+			tmp->_parent = node->_parent;
+			if (node->_parent == nullptr) {
+				_root = tmp;
+			}
+			else if (node == node->_parent->_right) {
+				node->_parent->_right = tmp;
+			}
+			else {
+				node->_parent->_left = tmp;
+			}
+			tmp->_right = node;
+			node->_parent = tmp;
+		}
 	private:
 		branch _root;
 		branch _TNULL;
+		void initNULLNode(branch node, branch parent) {
+			node->_data = 0;
+			node->_parent = parent;
+			node->_left = nullptr;
+			node->_right = nullptr;
+			node->_color = 0; // black
+		}
 		void fixDelete(branch _b) {
 
 		}
