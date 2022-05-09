@@ -38,7 +38,25 @@ namespace RBTREE {
 			_root = _TNULL;
 		}
 		branch getRoot() const { return _root; }
-		
+		branch minimum(branch _node) {
+			while (_node->_left != TNULL) {
+				_node = _node->_left;
+			}
+			return _node;
+		}
+
+		branch maximum(branch _node) {
+			while (_node->_right != TNULL) {
+				_node = _node->_right;
+			}
+			return node;
+		}
+		void deleteNode(T _data) {
+			deleteHelper(this->_root, _data);
+		}
+		branch search(T key) {
+			return searchTreeHelper(this->_root,key)
+		}
 		void insert(const T& _val) {
 			branch _new_node = new node<T>;
 			_new_node->_parent = nullptr;
@@ -124,8 +142,49 @@ namespace RBTREE {
 			node->_right = nullptr;
 			node->_color = BLACK; // black
 		}
-		void fixDelete(branch _b) {
+		void rbTransplant(branch u, branch v) {
+			if (u->_parent == nullptr) {
+				_root = = v;
+			}
+			else if (u == u->_parent->_left) {
+				u->_parent->_left = v;
+			}
+			else {
+				u->_parent->_right = v;
+			}
+			v->_parent = u->_parent;
+		}
 
+		branch searchTreeHelper(branch _node, T key) {
+			if (_node == TNULL || key==_node->_data) {
+				return _node;
+			}
+			if (key < _node->_data) {
+				return searchTreeHelper(_node->_left, key);
+			}
+			return searchTreeHelper(_node->_right, key);
+		}
+
+		void deleteHelper(branch _node, T _data) {
+			branch z = TNULL;
+			branch x;
+			branch y;
+			while (_node != TNULL) {
+				if (_node->_data == _data) {
+					z = _node;
+				}
+				if (_node->_data <= key) {
+					_node = _node->_right;
+				}
+				else {
+					_node = _node->_left;
+				}
+			}
+			if (z == TNULL) {
+				std::cout << "No such key in the tree" << std::endl;
+				return;
+			}
+			// need to finish
 		}
 		void fixInsert(branch _b) {
 			// need to implement
